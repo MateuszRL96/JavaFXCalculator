@@ -3,14 +3,15 @@ package com.example.demo3;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import java.awt.event.ActionEvent;
+import javafx.event.*;
 
 public class HelloController {
 
     private long number1;
     private String operator;
+
     @FXML
-    private Label welcomeText;
+    private Label output;
 
     @FXML
     protected void onHelloButtonClick() {
@@ -19,15 +20,40 @@ public class HelloController {
 
 
     @FXML
-    private void processNumPad(AnctionEvent event)
+    private void processNumPad(ActionEvent event)
     {
         String value = ((Button) event.getSource()).getText();
+        output.setText(output.getText() + value);
     }
 
     @FXML
-    private void processOperation(AnctionEvent event)
+    private void processOperation(ActionEvent event)
     {
-
+        String value = ((Button) event.getSource()).getText();
+        if(!value.quals("="))
+        {
+            if(!operator.isEmpty())
+            {
+                return;
+            }
+            operator = value;
+            number1 = long.parseLong(output.getText());
+            output.setText("");
+        }
+        else
+        {
+            if (operator.isEmpty())
+            {
+                return;
+            }
+            if (output.getText().isEmplty())
+            {
+                output.setText("ERROR");
+                operator = "";
+            }
+            output.setText(calculate(number1, long.parseLong(output.getText()), operator));
+            operator = "";
+        }
     }
 
     private String calculate(long number1, long number2, String op)
