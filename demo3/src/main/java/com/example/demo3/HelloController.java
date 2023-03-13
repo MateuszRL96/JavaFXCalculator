@@ -8,20 +8,30 @@ import javafx.event.*;
 public class HelloController {
 
     private long number1;
-    private String operator;
+    private String operator ="";
+    private boolean start = true;
 
     @FXML
     private Label output;
 
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
 
+    @FXML
+    private void clearOutput(ActionEvent event)
+    {
+        output.setText("0");
+        start = true;
+        operator ="";
+    }
 
     @FXML
     private void processNumPad(ActionEvent event)
     {
+        if(start)
+        {
+            output.setText("");
+            start = false;
+
+        }
         String value = ((Button) event.getSource()).getText();
         output.setText(output.getText() + value);
     }
@@ -30,14 +40,14 @@ public class HelloController {
     private void processOperation(ActionEvent event)
     {
         String value = ((Button) event.getSource()).getText();
-        if(!value.quals("="))
+        if(!value.equals("="))
         {
             if(!operator.isEmpty())
             {
                 return;
             }
             operator = value;
-            number1 = long.parseLong(output.getText());
+            number1 = Long.parseLong(output.getText());
             output.setText("");
         }
         else
@@ -46,13 +56,15 @@ public class HelloController {
             {
                 return;
             }
-            if (output.getText().isEmplty())
+            if (output.getText().isEmpty())
             {
                 output.setText("ERROR");
                 operator = "";
+                start = true;
             }
-            output.setText(calculate(number1, long.parseLong(output.getText()), operator));
+            output.setText(calculate(number1, Long.parseLong(output.getText()), operator));
             operator = "";
+            start = true;
         }
     }
 
